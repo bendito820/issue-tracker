@@ -5,6 +5,7 @@ import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
 import NextLink from "next/link";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
+import classNames from "classnames";
 
 interface Params {
   searchParams: {
@@ -33,7 +34,7 @@ const IssuesPage = async ({ searchParams }: Params) => {
   const orderBy = columns
     .map((column) => column.value)
     .includes(searchParams.orderBy)
-    ? { [searchParams.orderBy]: "as c" }
+    ? { [searchParams.orderBy]: "asc" }
     : undefined;
 
   const issues = await prisma.issue.findMany({
@@ -51,7 +52,10 @@ const IssuesPage = async ({ searchParams }: Params) => {
         <Table.Header>
           <Table.Row>
             {columns.map((column) => (
-              <Table.ColumnHeaderCell key={column.value}>
+              <Table.ColumnHeaderCell
+                key={column.value}
+                className={column.className}
+              >
                 <NextLink
                   href={{
                     query: { ...searchParams, orderBy: column.value },
